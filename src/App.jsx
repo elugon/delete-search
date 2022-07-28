@@ -1,7 +1,9 @@
 import { set } from 'mongoose';
 import React, { useState } from 'react';
 import './App.css';
+import CardDelete from './components/CardDelete';
 import productData from './products.json';
+import SearchBar from './components/SearchBar';
 
 function App() {
   const [products, setProducts] = useState(productData);
@@ -12,26 +14,24 @@ function App() {
   setProducts(filtered)
   }
 
-  const handleSearch= (e) =>{
+  const handleSearch= (searchValue) =>{
 
-    if(e.target.value === ''){
+    if(searchValue === ''){
       setProducts(productData)
     } else{
-    const filtered=products.filter(ele=>ele.name.toLowerCase().includes(e.target.value.toLowerCase()))
+    const filtered=products.filter(ele=>ele.name.toLowerCase().includes(searchValue.toLowerCase()))
     setProducts(filtered)
     }}
 
   return (
     <div className="cart">
       <h1>My shopping cart</h1>
-      <input type="text" placeholder='Search' onChange={(e)=>handleSearch(e)}></input>
-
-      {products.map(ele=>{return (<div key={ele._id}>
-      <p>{ele.name}</p>
-      <button onClick={()=>handleDelete(ele._id)}>Delete</button>
-      </div>)} )}
-
-    </div>
+      <SearchBar onSearch={handleSearch} />
+      {products.map(elem => {
+        return (
+          <CardDelete key={elem._id} info={elem} onDelete={handleDelete} />
+        )
+      })}    </div>
   );
 }
 
